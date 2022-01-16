@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Consulta;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 /**
@@ -20,7 +21,7 @@ class ConsultaController extends Controller
     public $array= array();
     public function index()
     {
-        $consultas = Consulta::paginate();
+        $consultas = DB::select('select * from suc_quito.find_consultas ');
 
         $this->ecjson=json_encode($consultas);
         $this->array= (array)json_decode($this->ecjson);
@@ -46,14 +47,15 @@ class ConsultaController extends Controller
      */
     public function store(Request $request)
     {
-        $consulta = new Consulta;
+        /*$consulta = new Consulta;
         $consulta->cod_centros=$request->input('cod_centros');
         $consulta->cod_emp=$request->input('cod_emp');
         $consulta->cod_esp=$request->input('cod_esp');
         $consulta->fecha_con=$request->input('fecha_con');
         $consulta->hora_con=$request->input('hora_con');
         $consulta->paciente_con=$request->input('paciente_con');
-        $consulta->save();
+        $consulta->save();*/
+        DB::select('SELECT save_consultas(?, ?, ?, ?, ?, ?)', [1, $request->input('cod_emp'), $request->input('cod_esp'), $request->input('fecha_con'), $request->input('hora_con'), $request->input('paciente_con'), ]);
     }
 
     /**
@@ -64,8 +66,8 @@ class ConsultaController extends Controller
      */
     public function show($id)
     {
-        $consulta = Consulta::find($id);
-
+        //$consulta = Consulta::find($id);
+        $consulta = DB::select('select * from suc_quito.find_consultas where cod_con= ?',[$id]);
         $this->ecjson=json_encode($consulta);
         $this->array= (array)json_decode($this->ecjson);
         return $this->ecjson;
@@ -91,14 +93,9 @@ class ConsultaController extends Controller
      * @param  Consulta $consulta
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Consulta $consulta)
+    public function update(Request $request)
     {
-        request()->validate(Consulta::$rules);
-
-        $consulta->update($request->all());
-
-        return redirect()->route('consultas.index')
-            ->with('success', 'Consulta updated successfully');
+        $consulta = DB::select('call update_consultas(?, ?, ?, ?, ?, ?, ?)',[1, $request->input('cod_emp'), $request->input('cod_esp'), $request->input('fecha_con'), $request->input('hora_con'), $request->input('paciente_con'), $request->input('cod_con')]);
     }
 
     /**
@@ -108,6 +105,6 @@ class ConsultaController extends Controller
      */
     public function destroy($id)
     {
-        $consulta = Consulta::find($id)->delete();
+        $consulta = DB::select('call suc_quito.delete_consultas(?)',[$id]);
     }
 }

@@ -22,7 +22,7 @@ use App\Http\Controllers\MedicoController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::resource('centro', CentroController::class);
+//Route::resource('centro', CentroController::class);
 Route::resource('especialidad', EspecialidadController::class);
 Route::resource('consultas', ConsultaController::class);
 Route::resource('empleado', EmpleadoController::class);

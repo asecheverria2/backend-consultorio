@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Empleado;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 /**
@@ -20,7 +21,7 @@ class EmpleadoController extends Controller
     public $array= array();
     public function index()
     {
-        $empleados = Empleado::paginate();
+        $empleados = DB::select('select * from suc_quito.find_empleados ');
 
         $this->ecjson=json_encode($empleados);
         $this->array= (array)json_decode($this->ecjson);
@@ -46,13 +47,14 @@ class EmpleadoController extends Controller
      */
     public function store(Request $request)
     {
-        $empleado = new Empleado;
+        /*$empleado = new Empleado;
         $empleado->nombre_emp=$request->input('nombre_emp');
         $empleado->dir_emp=$request->input('dir_emp');
         $empleado->salario_emp=$request->input('salario_emp');
         $empleado->fecha_ent_emp=$request->input('fecha_ent_emp');
         $empleado->cod_centros=$request->input('cod_centros');
-        $empleado->save();
+        $empleado->save();*/
+        DB::select('SELECT save_empleados(?, ?, ?, ?, ?)', [$request->input('nombre_emp'), $request->input('dir_emp'), $request->input('salario_emp'), $request->input('fecha_ent_emp'), 1]);
     }
 
     /**
@@ -63,8 +65,8 @@ class EmpleadoController extends Controller
      */
     public function show($id)
     {
-        $empleado = Empleado::find($id);
-
+        //$empleado = Empleado::find($id);
+        $empleado = DB::select('select * from find_empleados where cod_emp= ?',[$id]);
         $this->ecjson=json_encode($empleado);
         $this->array= (array)json_decode($this->ecjson);
         return $this->ecjson;
@@ -92,12 +94,8 @@ class EmpleadoController extends Controller
      */
     public function update(Request $request, Empleado $empleado)
     {
-        request()->validate(Empleado::$rules);
+        $empleado = DB::select('call update_empleados(?, ?, ?, ?, ?, ?)', [$request->input('nombre_emp'), $request->input('dir_emp'), $request->input('salario_emp'), $request->input('fecha_ent_emp'), 1, $request->input('cod_emp')]);
 
-        $empleado->update($request->all());
-
-        return redirect()->route('empleados.index')
-            ->with('success', 'Empleado updated successfully');
     }
 
     /**
@@ -105,9 +103,10 @@ class EmpleadoController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception
      */
-    public function destroy($id)
+    /*public function destroy($id)
     {
-        $empleado = Empleado::find($id)->delete();
+        $empleado = DB::select('call delete_empleados(?)',[$id]);
 
-    }
+
+    }*/
 }

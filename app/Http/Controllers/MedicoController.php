@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Medico;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 /**
@@ -20,7 +21,7 @@ class MedicoController extends Controller
     public $array= array();
     public function index()
     {
-        $medicos = Medico::paginate();
+        $consultas = DB::select('select * from suc_quito.find_medicos ');
 
         $this->ecjson=json_encode($medicos);
         $this->array= (array)json_decode($this->ecjson);
@@ -46,11 +47,13 @@ class MedicoController extends Controller
      */
     public function store(Request $request)
     {
-        $medico = new Medico;
+        /*$medico = new Medico;
         $medico->cod_emp=$request->input('cod_emp');
         $medico->func_med=$request->input('func_med');
         $medico->exp_med=$request->input('exp_med');
-        $medico->save();
+        $medico->save();*/
+        DB::select('SELECT save_medicos(?, ?, ?)', [$request->input('cod_emp'), $request->input('func_med'), $request->input('exp_med')]);
+
     }
 
     /**
@@ -61,7 +64,7 @@ class MedicoController extends Controller
      */
     public function show($id)
     {
-        $medico = Medico::find($id);
+        $consulta = DB::select('select * from suc_quito.find_medicos where cod_med= ?',[$id]);
 
         $this->ecjson=json_encode($medico);
         $this->array= (array)json_decode($this->ecjson);
@@ -90,12 +93,7 @@ class MedicoController extends Controller
      */
     public function update(Request $request, Medico $medico)
     {
-        request()->validate(Medico::$rules);
-
-        $medico->update($request->all());
-
-        return redirect()->route('medicos.index')
-            ->with('success', 'Medico updated successfully');
+        $medico = DB::select('call update_medicos(?, ?, ?, ?)',[$request->input('cod_emp'), $request->input('func_med'), $request->input('exp_med'), $request->input('cod_med')]);
     }
 
     /**
@@ -105,6 +103,6 @@ class MedicoController extends Controller
      */
     public function destroy($id)
     {
-        $medico = Medico::find($id)->delete();
+        $medico = DB::select('call suc_quito.delete_medicos(?)',[$id]);
     }
 }

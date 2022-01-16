@@ -31,7 +31,7 @@ class EspecialidadController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    /*public function create()
     {
         $especialidad = new Especialidad();
         return view('especialidad.create', compact('especialidad'));
@@ -43,7 +43,7 @@ class EspecialidadController extends Controller
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    /*public function store(Request $request)
     {
         $especialidad = new Especialidad;
         $especialidad->nombre_esp=$request->input('nombre_esp');
@@ -72,7 +72,7 @@ class EspecialidadController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    /*public function edit($id)
     {
         $especialidad = Especialidad::find($id);
 
@@ -86,7 +86,7 @@ class EspecialidadController extends Controller
      * @param  Especialidad $especialidad
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Especialidad $especialidad)
+    /*public function update(Request $request, Especialidad $especialidad)
     {
         request()->validate(Especialidad::$rules);
 
@@ -101,9 +101,9 @@ class EspecialidadController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception
      */
-    public function destroy($id)
+    /*public function destroy($id)
     {
         $especialidad = Especialidad::find($id)->delete();
 
-    }
+    }*/
 }
