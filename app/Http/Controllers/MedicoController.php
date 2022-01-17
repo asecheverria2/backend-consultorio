@@ -64,7 +64,7 @@ class MedicoController extends Controller
      */
     public function show($id)
     {
-        $consulta = DB::select('select * from suc_quito.find_medicos where cod_med= ?',[$id]);
+        $medico = DB::select('select * from suc_quito.find_medicos where cod_med= ?',[$id]);
 
         $this->ecjson=json_encode($medico);
         $this->array= (array)json_decode($this->ecjson);
